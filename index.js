@@ -1,33 +1,41 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const cookieSession = require("cookie-session");
+const session = require("express-session");
+const authRoutes = require("./routes/authRoutes");
 const keys = require("./config/keys");
+require("./models/User");
+require("./services/passport");
 
 const app = express();
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL: "/auth/google/callback",
-    },
-    (accessToken, refreshToken, profile, done) => {
-      console.log("access token", accessToken);
-      console.log("refresh token", refreshToken);
-      console.log("profile:", profile);
-    }
-  )
-);
-
-app.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
+mongoose.set("strictQuery", true);
+mongoose
+  .connect("mongodb://127.0.0.1:27017/emaily-dev")
+  .then(() => {
+    console.log("connect successful");
   })
-);
+  .catch((err) => {
+    console.log("connect failed");
+  });
 
-app.get("/auth/google/callback", passport.authenticate("google"));
+const sessionConfig = {
+  secret: keys.cookieKey,
+  resave: "false",
+  saveUninitialized: "true",
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() * 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+  },
+};
+
+app.use(session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(authRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
