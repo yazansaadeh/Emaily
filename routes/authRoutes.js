@@ -10,7 +10,13 @@ Router.get(
   })
 );
 
-Router.get("/auth/google/callback", passport.authenticate("google"));
+Router.get(
+  "/auth/google/callback",
+  passport.authenticate("google"),
+  (req, res) => {
+    res.redirect("/surveys");
+  }
+);
 
 Router.get("/api/current_user", (req, res) => {
   res.send(req.user);
@@ -21,7 +27,7 @@ Router.get("/api/logout", (req, res) => {
     if (err) {
       return res.status(500).send(err.message);
     }
-    res.send(req.user);
+    res.redirect("/");
   });
 });
 
