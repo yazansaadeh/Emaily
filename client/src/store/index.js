@@ -9,3 +9,4 @@ const store = configureStore({
 
 export { store };
 export * from "./thunk/fetchUser";
+export * from "./thunk/handleToken";

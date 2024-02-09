@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const session = require("express-session");
+const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
+const billingRoutes = require("./routes/billingRoutes");
 const keys = require("./config/keys");
 require("./models/User");
 require("./services/passport");
@@ -31,11 +33,13 @@ const sessionConfig = {
   },
 };
 
+app.use(bodyParser.json());
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(authRoutes);
+app.use(billingRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
