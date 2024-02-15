@@ -6,8 +6,10 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const billingRoutes = require("./routes/billingRoutes");
+const surveyRoutes = require("./routes/surveyRoutes");
 const keys = require("./config/keys");
 require("./models/User");
+require("./models/Surveys");
 require("./services/passport");
 
 const app = express();
@@ -40,6 +42,7 @@ app.use(passport.session());
 
 app.use(authRoutes);
 app.use(billingRoutes);
+app.use(surveyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
