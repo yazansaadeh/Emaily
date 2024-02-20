@@ -1,15 +1,14 @@
 import { Route, BrowserRouter } from "react-router-dom";
 import Header from "./component/Header";
 import Landing from "./component/Landing";
-
-const SurveyNew = () => <h1>SurveyNew</h1>;
-const Dashboard = () => <h1>Dashboard</h1>;
+import Dashboard from "./component/Dashboard";
+import SurveyNew from "./component/surveys/SurveyNew";
 
 function App() {
   return (
     <div className="container">
       <BrowserRouter>
-        <div>
+        <div className="container">
           <Header />
           <Route exact path="/" component={Landing}></Route>
           <Route exact path="/surveys" component={Dashboard}></Route>
